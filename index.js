@@ -25,7 +25,6 @@ const User = connection.define("users", {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    initialValue: 1000
   },
   grouppatrol: DataTypes.TEXT,
   officername: DataTypes.TEXT,
@@ -38,7 +37,7 @@ const User = connection.define("users", {
   toggle: DataTypes.BOOLEAN,
   date: DataTypes.STRING,
   time : DataTypes.STRING,
-},{timestamps : false});
+},{initialAutoIncrement:1000},{timestamps : false});
 
 const Data = connection.define("boothdata", {
   id: {
