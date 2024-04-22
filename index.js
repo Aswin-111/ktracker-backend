@@ -25,6 +25,7 @@ const User = connection.define("users", {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
+    initialValue: 1000
   },
   grouppatrol: DataTypes.TEXT,
   officername: DataTypes.TEXT,
@@ -38,7 +39,24 @@ const User = connection.define("users", {
   date: DataTypes.STRING,
   time : DataTypes.STRING,
 },{timestamps : false});
-// User.sync({force: true});
+
+const Data = connection.define("boothdata", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  lat: DataTypes.STRING,
+  long: DataTypes.STRING,
+
+  name : DataTypes.STRING,
+  serialid:{
+    type : DataTypes.INTEGER,
+    primaryKey : true,
+   }
+
+},{timestamps : false});
+// Data.sync({force: true});
 
 // io.on("connection", (socket) => {
 //   console.log("a user connected");
@@ -103,6 +121,13 @@ app.post("/updateusersdata", async (req, res) => {
    
   
 });
+
+  app.post("/getuser" ,async(req,res) =>{
+    const response = await User.findOne({where : {
+      id : req.body.id
+    }})
+    return res.json({ status: "done", data:response});
+  })
 app.get("/users", async (req, res) => {
  
           const users = await User.findAll();
@@ -112,6 +137,24 @@ app.get("/users", async (req, res) => {
       console.log(users)
       return res.json({users:users})
     
+});
+app.post("/fetchuserdata", async (req, res) => {
+ 
+  const users = await User.findAll({
+    where: {
+      id: req.body.id
+    },
+  });
+  const data = await Data.findAll({
+    where: {
+      id: req.body.id
+    },
+  });
+  console.log("void setup",req.body.id);
+  // io.emit("fetchdata", [...users]);
+console.log(data)
+return res.json({users:users,usersdata:data})
+
 });
 app.post("/updatestatus", async (req, res) => {
   const { id } = req.body;
@@ -132,6 +175,12 @@ app.post("/updatestatus", async (req, res) => {
   }
 });
 
+app.get("/getlatlong", async (req, res) => {
+ 
+  const latlong = await Data.findAll();
+return res.json({latlong})
+
+});
 app.listen(5000, () => {
   console.log("listening on :5000");
 });
