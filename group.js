@@ -8,24 +8,25 @@ const connection = new Sequelize("police_tracker", "root", "pass@123", {
 });
 // Path to your CSV file
 const User = connection.define("users", {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    grouppatrol: DataTypes.TEXT,
-    officername: DataTypes.TEXT,
-    location: DataTypes.STRING,
-  
-    phone: DataTypes.STRING,
-  
-    status: DataTypes.BOOLEAN,
-  
-    toggle: DataTypes.BOOLEAN,
-    date: DataTypes.STRING,
-    time : DataTypes.STRING,
-  },{timestamps : false});
-  
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  grouppatrol: DataTypes.TEXT,
+  officername: DataTypes.TEXT,
+  location: DataTypes.STRING,
+
+  phone: DataTypes.STRING,
+
+  status: DataTypes.BOOLEAN,
+
+  toggle: DataTypes.BOOLEAN,
+  date: DataTypes.STRING,
+  time : DataTypes.STRING,
+},{initialAutoIncrement:1000},{timestamps : false});
+
+User.sync({force:true});
 // Read the CSV file
 fs.createReadStream('./data.csv')
   .pipe(csv())
